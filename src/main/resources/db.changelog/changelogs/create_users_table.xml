@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create_user_table_1" author="m4xin4t4@gmail.com">
+        <createSequence sequenceName="user_sequence" startValue="1" incrementBy="1"/>
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <insert tableName="users">
+            <column name="username" value="user"/>
+            <column name="password" value="$2y$10$qUr/DWFbBa84H.tCa5xrTucaSPEw6n932BLGFaYqT4F5FjNeTBaq6"/>
+            <column name="email" value="user@email.ru"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="admin"/>
+            <column name="password" value="$2y$10$UQ2zBJlzw9IUW3wDqm.rH.px5EvqIJkOiKWc35jzz9lKe2dFXEDRO"/>
+            <column name="email" value="admin@email.ru"/>
+        </insert>
+    </changeSet>
+
+
+</databaseChangeLog>

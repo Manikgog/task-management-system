@@ -1,7 +1,7 @@
-package ru.gogolin.task.repository;
+package ru.gogolin.task.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.gogolin.task.entity.Task;
+import ru.gogolin.task.entities.Task;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package ru.gogolin.task.entity;
+package ru.gogolin.task.entities;
 
 import jakarta.persistence.*;
 
