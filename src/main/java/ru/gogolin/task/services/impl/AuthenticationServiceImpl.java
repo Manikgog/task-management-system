@@ -3,13 +3,11 @@ package ru.gogolin.task.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import ru.gogolin.task.dtos.AuthenticationUserDto;
 import ru.gogolin.task.dtos.JwtRequest;
 import ru.gogolin.task.entities.Role;
-import ru.gogolin.task.services.AuthenticationService;
 import ru.gogolin.task.entities.User;
-
+import ru.gogolin.task.services.AuthenticationService;
 import java.util.List;
 
 @Service
@@ -21,8 +19,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationUserDto findByEmailAndPassword(JwtRequest authRequest) {
-        User user = userService.findByEmail(authRequest.email())
-                .orElseThrow(() -> new NotFoundException(String.format("Указанный email %s не найден", authRequest.email())));
+        User user = userService.findByEmail(authRequest.email());
         if (user != null && passwordEncoder.matches(authRequest.password(), user.getPassword())) {
             return new AuthenticationUserDto(
                     user.getUsername(),

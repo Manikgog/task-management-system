@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagment -> sessionManagment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AUTH_WHITELIST).permitAll() // Доступ для всех
-                        .requestMatchers("/admin").hasRole("ADMIN") // Доступ только для ROLE_ADMIN
+                        .requestMatchers("/admin", "/delete").hasRole("ADMIN") // Доступ только для ROLE_ADMIN
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))

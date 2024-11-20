@@ -2,7 +2,6 @@ package ru.gogolin.task.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import ru.gogolin.task.dtos.TaskDto;
 import ru.gogolin.task.entities.Priority;
 import ru.gogolin.task.entities.Status;
@@ -24,10 +23,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void addTask(TaskDto taskDto, String username) {
-        User executor = userService.findByEmail(taskDto.executor())
-                .orElseThrow(() -> new NotFoundException(String.format("Исполнитель с email %s не найден", taskDto.executor())));
-        User author = userService.findByEmail(username)
-                .orElseThrow(() -> new NotFoundException(String.format("Автор с email %s не найден", taskDto.executor())));
+        User executor = userService.findByEmail(taskDto.executor());
+        User author = userService.findByEmail(username);
         Status status = statusService.getStatus(taskDto.status());
         Priority priority = priorityService.getPriority(taskDto.priority());
         Task task = new Task(

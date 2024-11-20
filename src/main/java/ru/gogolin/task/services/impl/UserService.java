@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gogolin.task.entities.User;
 import ru.gogolin.task.repositories.UsersRepository;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -19,15 +18,15 @@ public class UserService implements UserDetailsService {
         this.usersRepository = usersRepository;
     }
 
-    public Optional<User> findByEmail(String email) {
-        return usersRepository.findByUsername(email);
+    public User findByEmail(String email) {
+        return usersRepository.findByUsername(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь '%s' не найден", email)));
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь '%s' не найден", email)));
+        User user = findByEmail(email);
         return new org.springframework.security.core.userdetails.User(
                 user.getName(),
                 user.getPassword(),
@@ -38,4 +37,8 @@ public class UserService implements UserDetailsService {
         );
     }
 
+    public void deleteByEmail(String email) {
+        User userToDelete = findByEmail(email);
+        usersRepository.delete(userToDelete);
+    }
 }
