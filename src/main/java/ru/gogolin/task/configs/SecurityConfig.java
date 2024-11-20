@@ -28,6 +28,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @EnableGlobalAuthentication
 public class SecurityConfig {
+
     @Value("${spring.security.cors.allowedOrigins:*}")
     private String allowedOrigins;
 
@@ -37,6 +38,16 @@ public class SecurityConfig {
     private final UserService userService;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final JwtRequestFilter jwtRequestFilter;
+    private static final String[] AUTH_WHITELIST = {
+            "/auth",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/webjars/**",
+            "/unsecured",
+            "/registration"
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -66,7 +77,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagment -> sessionManagment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/unsecured", "/auth").permitAll() // Доступ для всех
+                        .requestMatchers(AUTH_WHITELIST).permitAll() // Доступ для всех
                         .requestMatchers("/admin").hasRole("ADMIN") // Доступ только для ROLE_ADMIN
                         .anyRequest().authenticated()
                 )

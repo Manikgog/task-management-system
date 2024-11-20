@@ -7,24 +7,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gogolin.task.entities.User;
-import ru.gogolin.task.repositories.RoleRepository;
 import ru.gogolin.task.repositories.UsersRepository;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UsersRepository usersRepository;
-    private final RoleRepository roleRepository;
 
-    public UserService(UsersRepository usersRepository, RoleRepository roleRepository) {
+    public UserService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-        this.roleRepository = roleRepository;
     }
 
-    public Optional<User> findByUsername(String username) {
-        return usersRepository.findByUsername(username);
+    public Optional<User> findByUsername(String email) {
+        return usersRepository.findByEmail(email);
     }
 
     @Override
@@ -42,8 +38,4 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public void createNewUser(User user) {
-        user.setRoles(List.of(roleRepository.findByName("ROLE_USER").get()));
-        usersRepository.save(user);
-    }
 }
