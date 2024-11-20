@@ -12,12 +12,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.webjars.NotFoundException;
+import ru.gogolin.task.dtos.AuthenticationUserDto;
 import ru.gogolin.task.dtos.JwtRequest;
 import ru.gogolin.task.dtos.JwtResponse;
 import ru.gogolin.task.dtos.RegistrationDto;
-import ru.gogolin.task.services.UserRegistrationService;
-import ru.gogolin.task.services.UserService;
+import ru.gogolin.task.entities.User;
+import ru.gogolin.task.exceptions.BadRequestException;
+import ru.gogolin.task.services.AuthenticationService;
+import ru.gogolin.task.services.impl.UserRegistrationService;
+import ru.gogolin.task.services.impl.UserService;
 import ru.gogolin.task.utils.JwtTokenUtils;
+
+import java.security.Principal;
 
 @Tag(name = "Authentication Controller", description = "API for working with authentication")
 @RestController
@@ -25,16 +32,15 @@ import ru.gogolin.task.utils.JwtTokenUtils;
 public class AuthController {
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
     private final UserRegistrationService userRegistrationService;
 
     @Operation(summary = "Authenticate user. Create token.")
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
-        }catch (BadCredentialsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        AuthenticationUserDto authenticationUserDto = authenticationService.findByEmailAndPassword(authRequest);
+        if(authenticationUserDto == null) {
+            throw new BadRequestException(String.format("Неправильный email или пароль"));
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.email());
         String token = jwtTokenUtils.generateToken(userDetails);

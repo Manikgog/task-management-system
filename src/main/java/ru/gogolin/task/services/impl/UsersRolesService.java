@@ -1,4 +1,4 @@
-package ru.gogolin.task.services;
+package ru.gogolin.task.services.impl;
 
 import org.springframework.stereotype.Service;
 import ru.gogolin.task.entities.UsersRoles;

@@ -10,25 +10,25 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="username" type="varchar(30)">
-                <constraints nullable="false"/>
+            <column name="email" type="varchar(150)">
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="password" type="varchar(150)">
                 <constraints nullable="false"/>
             </column>
-            <column name="email" type="varchar(150)">
+            <column name="name" type="varchar(30)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <insert tableName="users">
-            <column name="username" value="user"/>
-            <column name="password" value="$2y$10$qUr/DWFbBa84H.tCa5xrTucaSPEw6n932BLGFaYqT4F5FjNeTBaq6"/>
             <column name="email" value="user@email.ru"/>
+            <column name="password" value="$2y$10$qUr/DWFbBa84H.tCa5xrTucaSPEw6n932BLGFaYqT4F5FjNeTBaq6"/>
+            <column name="name" value="user"/>
         </insert>
         <insert tableName="users">
-            <column name="username" value="admin"/>
-            <column name="password" value="$2y$10$UQ2zBJlzw9IUW3wDqm.rH.px5EvqIJkOiKWc35jzz9lKe2dFXEDRO"/>
             <column name="email" value="admin@email.ru"/>
+            <column name="password" value="$2y$10$UQ2zBJlzw9IUW3wDqm.rH.px5EvqIJkOiKWc35jzz9lKe2dFXEDRO"/>
+            <column name="name" value="admin"/>
         </insert>
     </changeSet>
 

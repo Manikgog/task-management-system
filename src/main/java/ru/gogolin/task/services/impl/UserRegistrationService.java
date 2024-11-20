@@ -1,4 +1,4 @@
-package ru.gogolin.task.services;
+package ru.gogolin.task.services.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,18 +13,15 @@ import java.util.List;
 @Service
 public class UserRegistrationService {
     private final UsersRepository usersRepository;
-    private final UsersRolesService usersRolesService;
     private final RoleService roleService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     public UserRegistrationService(UsersRepository usersRepository,
-                                   UsersRolesService usersRolesService,
                                    RoleService roleService,
                                    UserMapper userMapper,
                                    PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
-        this.usersRolesService = usersRolesService;
         this.roleService = roleService;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -34,17 +31,13 @@ public class UserRegistrationService {
         if(!registrationDto.password().equals(registrationDto.confirmPassword())){
             throw new BadRequestException("Пароли не совпадают");
         }
-        if(usersRepository.findByEmail(registrationDto.email()).isPresent()){
+        if(usersRepository.findByUsername(registrationDto.email()).isPresent()){
             throw new BadRequestException("Пользователь с указаной почтой уже существует");
         }
         User user = userMapper.fromDtoToEntity(registrationDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of(roleService.getRoleByName("ROLE_USER")));
-        User newUser = usersRepository.save(user);
-        List<Role> roles = (List)newUser.getRoles();
-        for (Role role : roles) {
-            usersRolesService.saveUsersRole(newUser.getId(), role.getId());
-        }
+        usersRepository.save(user);
     }
 
 }

@@ -17,14 +17,14 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "email")
     private String username;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "name")
+    private String name;
 
     @ManyToMany
     @JoinTable(

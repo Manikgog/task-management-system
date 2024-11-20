@@ -1,4 +1,4 @@
-package ru.gogolin.task.services;
+package ru.gogolin.task.services.impl;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,17 +19,17 @@ public class UserService implements UserDetailsService {
         this.usersRepository = usersRepository;
     }
 
-    public Optional<User> findByUsername(String email) {
-        return usersRepository.findByEmail(email);
+    public Optional<User> findByEmail(String email) {
+        return usersRepository.findByUsername(email);
     }
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
-                String.format("Пользователь '%s' не найден", username)));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь '%s' не найден", email)));
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getName(),
                 user.getPassword(),
                 user.getRoles()
                         .stream()

@@ -1,8 +1,13 @@
 package ru.gogolin.task.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "tasks")
 @SequenceGenerator(name = "task_seq", sequenceName = "task_sequence", allocationSize = 1)
 public class Task {
@@ -36,7 +41,13 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, String description, Status status, User author, Priority priority, String comment, User executor) {
+    public Task(String title,
+                String description,
+                Status status,
+                User author,
+                Priority priority,
+                String comment,
+                User executor) {
         this.title = title;
         this.description = description;
         this.status = status;
