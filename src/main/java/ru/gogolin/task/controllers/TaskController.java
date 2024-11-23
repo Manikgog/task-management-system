@@ -1,19 +1,22 @@
 package ru.gogolin.task.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.gogolin.task.dtos.TaskDto;
-import ru.gogolin.task.dtos.TaskResponseDto;
+import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.services.TaskService;
 import java.security.Principal;
 import java.util.List;
 
-@RestController("/task")
+@Tag(name = "Task Controller", description = "API for working with tasks")
+@RestController
+@RequestMapping("/task")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -27,17 +30,17 @@ public class TaskController {
 
     @Operation(summary = "Deletion task.")
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
-    @DeleteMapping("/{title}")
-    public ResponseEntity<String> deleteTask(@PathVariable(name = "title") String title) {
-        taskService.deleteTask(title);
+    @DeleteMapping("/title")
+    public ResponseEntity<String> deleteTask(@RequestBody TitleDto title) {
+        taskService.deleteTask(title.title());
         return ResponseEntity.ok("Task deleted");
     }
 
     @Operation(summary = "Search for a task by title.")
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
-    @GetMapping("/{title}")
-    public ResponseEntity<TaskResponseDto> getTask(@PathVariable(name = "title") String title, Principal principal) {
-        return ResponseEntity.ok(taskService.getTask(title, principal.getName()));
+    @GetMapping("/getByTitle")
+    public ResponseEntity<TaskResponseDto> getTask(@RequestBody TitleDto title, Principal principal) {
+        return ResponseEntity.ok(taskService.getTask(title.title(), principal.getName()));
     }
 
     @Operation(summary = "Getting all the tasks.")
@@ -49,7 +52,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Getting your tasks.")
-    @GetMapping("/email/author")
+    @GetMapping("/getYourTasks")
     public ResponseEntity<List<TaskResponseDto>> getTasks(@RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size,
                                                                   Principal principal) {
@@ -57,32 +60,32 @@ public class TaskController {
     }
 
     @Operation(summary = "Getting tasks by author.")
-    @GetMapping("/{authorEmail}/author")
-    public ResponseEntity<List<TaskResponseDto>> getTasksByAuthor(@PathVariable String authorEmail,
+    @GetMapping("/getByAuthorEmail")
+    public ResponseEntity<List<TaskResponseDto>> getTasksByAuthor(@Valid @RequestBody EmailDto authorEmail,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(taskService.getTasksByAuthor(authorEmail, page, size));
+        return ResponseEntity.ok(taskService.getTasksByAuthor(authorEmail.email(), page, size));
     }
 
     @Operation(summary = "Getting tasks by executor.")
-    @GetMapping("/{executorEmail}/executor")
-    public ResponseEntity<List<TaskResponseDto>> getTasksByExecutor(@PathVariable String executorEmail,
+    @GetMapping("/getByExecutorEmail")
+    public ResponseEntity<List<TaskResponseDto>> getTasksByExecutor(@Valid @RequestBody EmailDto executorEmail,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(taskService.getTasksByExecutor(executorEmail, page, size));
+        return ResponseEntity.ok(taskService.getTasksByExecutor(executorEmail.email(), page, size));
     }
 
     @Operation(summary = "Changing status of task.")
-    @PatchMapping("/{title}")
-    public ResponseEntity<TaskResponseDto> changeStatus(@RequestBody TaskDto taskDto, Authentication authentication) {
+    @PatchMapping("/patch")
+    public ResponseEntity<TaskResponseDto> changeStatus(@Valid @RequestBody TaskStatusDto taskDto, Authentication authentication) {
         return ResponseEntity.ok(taskService.changeStatus(taskDto, authentication));
     }
 
     @Operation(summary = "Changing task.")
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @PatchMapping
-    public ResponseEntity<TaskResponseDto> changeTask(@RequestBody TaskDto taskDto, Authentication authentication) {
-        return ResponseEntity.ok(taskService.changeTask(taskDto, authentication));
+    public ResponseEntity<TaskResponseDto> changeTask(@Valid @RequestBody TaskPatchDto taskDto) {
+        return ResponseEntity.ok(taskService.changeTask(taskDto));
     }
 
 }

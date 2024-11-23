@@ -25,9 +25,6 @@
             <column name="author_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="comment" type="varchar(200)">
-                <constraints nullable="true"/>
-            </column>
             <column name="executor_id" type="bigint">
                 <constraints nullable="true"/>
             </column>

@@ -8,9 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-import ru.gogolin.task.dtos.TaskDto;
-import ru.gogolin.task.dtos.TaskResponseDto;
-import ru.gogolin.task.dtos.UserDto;
+import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.entities.Priority;
 import ru.gogolin.task.entities.Status;
 import ru.gogolin.task.entities.Task;
@@ -153,7 +151,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto changeStatus(TaskDto taskDto, Authentication authentication) {
+    public TaskResponseDto changeStatus(TaskStatusDto taskDto, Authentication authentication) {
         User executor = userService.findByEmail(authentication.getName());
         Task task = getTaskByTitle(taskDto.title());
         if(executor.equals(task.getExecutor()) ||
@@ -173,7 +171,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto changeTask(TaskDto taskDto, Authentication authentication) {
+    public TaskResponseDto changeTask(TaskPatchDto taskDto) {
         Task task = getTaskByTitle(taskDto.title());
         if(!taskDto.status().isEmpty()) {
             Status status = statusService.getStatus(taskDto.status());
@@ -184,7 +182,7 @@ public class TaskServiceImpl implements TaskService {
             task.setPriority(priority);
         }
         if(!taskDto.executor().isEmpty()) {
-            User executor = userService.findByEmail(authentication.getName());
+            User executor = userService.findByEmail(taskDto.executor());
             task.setExecutor(executor);
         }
         Task newTask = taskRepository.save(task);

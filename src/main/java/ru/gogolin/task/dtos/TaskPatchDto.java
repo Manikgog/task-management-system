@@ -6,17 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import ru.gogolin.task.utils.ValidationConstants;
 
-public record TaskDto(
-
+public record TaskPatchDto(
         @NotBlank(message = "Title is mandatory!")
         @Length(max = 150, message = "The title is too long, the max number of symbols is 150")
         @Schema(defaultValue = "Title of task.")
         String title,
-
-        @NotBlank(message = "Description is mandatory!")
-        @Length(max = 200, message = "The description is too long, the max number of symbols is 200")
-        @Schema(defaultValue = "Description of task.")
-        String description,
 
         @NotBlank(message = "Status is mandatory!")
         @Length(max = 50, message = "The title is too long, the max number of symbols is 50")
@@ -28,12 +22,10 @@ public record TaskDto(
         @Schema(defaultValue = "Priority of task.", description = "Средний")
         String priority,
 
-
-        String executor,
-
-        @NotBlank(message = "Email of task author is mandatory!")
+        @NotBlank(message = "Email of task executor is mandatory!")
         @Length(max = 150, message = "The email is too long, the max number of symbols is 150")
         @Pattern(regexp = ValidationConstants.REGEXP_VALIDATE_EMAIL, message = "Invalid e-mail address")
         @Schema(defaultValue = "user@email.ru", description = "Email address")
-        String author
-) {}
+        String executor
+) {
+}

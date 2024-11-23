@@ -2,7 +2,9 @@ package ru.gogolin.task.services;
 
 import org.springframework.security.core.Authentication;
 import ru.gogolin.task.dtos.TaskDto;
+import ru.gogolin.task.dtos.TaskPatchDto;
 import ru.gogolin.task.dtos.TaskResponseDto;
+import ru.gogolin.task.dtos.TaskStatusDto;
 import ru.gogolin.task.entities.Task;
 
 import java.security.Principal;
@@ -25,7 +27,7 @@ public interface TaskService {
 
     Task getTaskByTitle(String title);
 
-    TaskResponseDto changeStatus(TaskDto taskDto, Authentication authentication);
+    TaskResponseDto changeStatus(TaskStatusDto taskDto, Authentication authentication);
 
-    TaskResponseDto changeTask(TaskDto taskDto, Authentication authentication);
+    TaskResponseDto changeTask(TaskPatchDto taskDto);
 }

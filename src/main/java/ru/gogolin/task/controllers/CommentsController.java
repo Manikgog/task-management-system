@@ -13,7 +13,8 @@ import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "Comment Controller", description = "API for working with comments on tasks.")
-@RestController("/comment")
+@RestController
+@RequestMapping("/comment")
 public class CommentsController {
 
     private final CommentService commentService;
