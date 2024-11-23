@@ -11,7 +11,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="varchar(150)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="description" type="varchar(200)">
                 <constraints nullable="false"/>
@@ -36,7 +36,7 @@
         <addForeignKeyConstraint
                 baseTableName="tasks"
                 baseColumnNames="status_id"
-                constraintName="fk_statuses_tasks_id"
+                constraintName="fk_tasks.status->statuses.id"
                 referencedTableName="statuses"
                 referencedColumnNames="id"
         />
@@ -44,7 +44,7 @@
         <addForeignKeyConstraint
                 baseTableName="tasks"
                 baseColumnNames="priority_id"
-                constraintName="fk_priorities_tasks_id"
+                constraintName="fk_tasks.priority->priorities.id"
                 referencedTableName="priorities"
                 referencedColumnNames="id"
         />
@@ -52,7 +52,7 @@
         <addForeignKeyConstraint
                 baseTableName="tasks"
                 baseColumnNames="author_id"
-                constraintName="fk_users-id_tasks-author-id"
+                constraintName="fk_tasks.author->users.id"
                 referencedTableName="users"
                 referencedColumnNames="id"
         />
@@ -60,7 +60,7 @@
         <addForeignKeyConstraint
                 baseTableName="tasks"
                 baseColumnNames="executor_id"
-                constraintName="fk_users-id_tasks-executor-id"
+                constraintName="fk_tasks.executor->users.id"
                 referencedTableName="users"
                 referencedColumnNames="id"
         />

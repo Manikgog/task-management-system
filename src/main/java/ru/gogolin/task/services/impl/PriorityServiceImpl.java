@@ -2,8 +2,8 @@ package ru.gogolin.task.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import ru.gogolin.task.entities.Priority;
+import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.repositories.PrioritiesRepository;
 import ru.gogolin.task.services.PriorityService;
 
@@ -15,7 +15,7 @@ public class PriorityServiceImpl implements PriorityService {
 
     @Override
     public Priority getPriority(String priority) {
-        return prioritiesRepository.findPriorityByName(priority)
-                .orElseThrow(() -> new NotFoundException(String.format("Приоритет с названием %s не найден", priority)));
+        return prioritiesRepository.findPriorityByName(priority.trim())
+                .orElseThrow(() -> new BadRequestException(String.format("Приоритет с названием %s не найден", priority)));
     }
 }

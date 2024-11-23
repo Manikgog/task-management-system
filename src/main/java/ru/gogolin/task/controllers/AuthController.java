@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,20 +34,21 @@ public class AuthController {
         if(authenticationUserDto == null) {
             throw new BadRequestException("Неправильный email или пароль");
         }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.email());
-        String token = jwtTokenUtils.generateToken(userDetails);
+        String token = jwtTokenUtils.generateToken(authenticationUserDto);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @PostMapping("/registration")
+    @Operation(summary = "Registration user.")
+    @PostMapping("/user/registration")
     public ResponseEntity<String> registration(@RequestBody RegistrationDto registrationDto) {
         userRegistrationService.createNewUser(registrationDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("User created.", HttpStatus.CREATED);
     }
 
-    @PostMapping("/delete")
+    @Operation(summary = "Deletion of user.")
+    @PostMapping("/user/delete")
     public ResponseEntity<String> deleteUser(@RequestBody String email) {
         userService.deleteByEmail(email);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("User deleted.", HttpStatus.CREATED);
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create_comments_table_1" author="m4xin4t4@gmail.com">
+        <createSequence sequenceName="comment_sequence" startValue="1" incrementBy="1"/>
+        <createTable tableName="comments">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="task_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="varchar(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="comments"
+                baseColumnNames="task_id"
+                constraintName="fk_comments.tasks_id->tasks.id"
+                referencedTableName="tasks"
+                referencedColumnNames="id"
+        />
+
+        <addForeignKeyConstraint
+                baseTableName="comments"
+                baseColumnNames="author_id"
+                constraintName="fk_comments.author_id->users.id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+        />
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -4,9 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import ru.gogolin.task.dtos.AuthenticationUserDto;
+import ru.gogolin.task.entities.Role;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,17 +20,18 @@ public class JwtTokenUtils {
     @Value("${jwt.expired}")
     private Duration jwtLifetime;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(AuthenticationUserDto authenticationUserDto) {
         Map<String, Object> claims = new HashMap<>();
-        List<String> roleList = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+        List<String> roleList = authenticationUserDto.roles()
+                .stream()
+                .map(Role::getName)
                 .toList();
         claims.put("roles", roleList);
         Date ussuedDate = new Date();
         Date expiredDate = new Date(ussuedDate.getTime() + jwtLifetime.toMillis());
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(authenticationUserDto.email())
                 .setIssuedAt(ussuedDate)
                 .setExpiration(expiredDate)
                 .signWith(SignatureAlgorithm.HS256, secret)

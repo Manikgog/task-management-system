@@ -4,12 +4,13 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
+    <include file="changelogs/create_status_table.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/create_priority_table.xml" relativeToChangelogFile="true"/>
     <include file="changelogs/create_table_roles.xml" relativeToChangelogFile="true"/>
     <include file="changelogs/create_users_table.xml" relativeToChangelogFile="true"/>
     <include file="changelogs/create_users_roles_table.xml" relativeToChangelogFile="true"/>
-    <include file="changelogs/create_status_table.xml" relativeToChangelogFile="true"/>
-    <include file="changelogs/create_priority_table.xml" relativeToChangelogFile="true"/>
     <include file="changelogs/create_tasks_table.xml" relativeToChangelogFile="true"/>
+    <include file="changelogs/create_comments_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
 

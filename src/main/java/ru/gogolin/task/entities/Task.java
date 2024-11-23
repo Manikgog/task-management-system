@@ -1,7 +1,6 @@
 package ru.gogolin.task.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,8 +31,6 @@ public class Task {
     @JoinColumn(name = "priority_id")
     private Priority priority;
 
-    private String comment;
-
     @ManyToOne
     @JoinColumn(name = "executor_id")
     private User executor;
@@ -46,14 +43,12 @@ public class Task {
                 Status status,
                 User author,
                 Priority priority,
-                String comment,
                 User executor) {
         this.title = title;
         this.description = description;
         this.status = status;
         this.author = author;
         this.priority = priority;
-        this.comment = comment;
         this.executor = executor;
     }
 

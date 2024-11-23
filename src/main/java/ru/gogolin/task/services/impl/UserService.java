@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gogolin.task.entities.User;
+import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.repositories.UsersRepository;
 
 @Service
@@ -20,7 +21,7 @@ public class UserService implements UserDetailsService {
 
     public User findByEmail(String email) {
         return usersRepository.findByUsername(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Пользователь '%s' не найден", email)));
+                .orElseThrow(() -> new BadRequestException(String.format("Пользователь c email -> '%s' не найден", email)));
     }
 
     @Override

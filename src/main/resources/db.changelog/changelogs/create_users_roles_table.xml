@@ -26,13 +26,13 @@
         
         <addForeignKeyConstraint baseTableName="users_roles"
                                  baseColumnNames="user_id"
-                                 constraintName="FK_users_roles.users_id-users.id"
+                                 constraintName="FK_users_roles.users_id->users.id"
                                  referencedTableName="users"
                                  referencedColumnNames="id"/>
 
         <addForeignKeyConstraint baseTableName="users_roles"
                                  baseColumnNames="role_id"
-                                 constraintName="FK_users_roles.users_id-roles.id"
+                                 constraintName="FK_users_roles.role_id->roles.id"
                                  referencedTableName="roles"
                                  referencedColumnNames="id"/>
     </changeSet>

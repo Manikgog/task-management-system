@@ -1,10 +1,11 @@
 package ru.gogolin.task.dtos;
 
-public record TaskDto(
+public record TaskResponseDto(
         String title,
         String description,
         String status,
         String priority,
-        String executor,
-        String author
-) {}
+        UserDto author,
+        UserDto executor
+) {
+}

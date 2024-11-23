@@ -20,6 +20,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
         <insert tableName="users">
             <column name="email" value="user@email.ru"/>
             <column name="password" value="$2y$10$qUr/DWFbBa84H.tCa5xrTucaSPEw6n932BLGFaYqT4F5FjNeTBaq6"/>
