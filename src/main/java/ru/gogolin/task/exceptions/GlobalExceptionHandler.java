@@ -14,12 +14,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleBadRequest(EntityNotFoundException exception) {
+    public ResponseEntity<String> handleEntityNoFound(EntityNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IsNotExecutorException.class)
-    public ResponseEntity<String> handleBadRequest(IsNotExecutorException exception) {
+    public ResponseEntity<String> handleIsNotExecutorExist(IsNotExecutorException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<String> handleTokenException(TokenException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

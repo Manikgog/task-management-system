@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.gogolin.task.dtos.TaskDto;
 import ru.gogolin.task.dtos.TaskResponseDto;
 import ru.gogolin.task.services.TaskService;
-import ru.gogolin.task.services.impl.CheckAccessService;
 import java.security.Principal;
 import java.util.List;
 
@@ -19,7 +18,6 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
-    private final CheckAccessService checkAccessService;
 
     @Operation(summary = "Creation task.")
     @PostMapping("/create")

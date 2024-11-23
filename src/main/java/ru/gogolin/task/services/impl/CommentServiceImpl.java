@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.gogolin.task.dtos.CommentDto;
 import ru.gogolin.task.dtos.CommentResponseDto;
 import ru.gogolin.task.entities.Comment;
-import ru.gogolin.task.entities.Role;
 import ru.gogolin.task.entities.Task;
 import ru.gogolin.task.entities.User;
 import ru.gogolin.task.exceptions.BadRequestException;
@@ -55,15 +54,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long commentId, Principal principal) {
-        User authorOfComment = userService.findByEmail(principal.getName());
-        Comment commentToDelete = commentRepository.findById(commentId)
-                        .orElseThrow(() -> new BadRequestException(String.format("Comment with id=%s not found", commentId)));
+    public void deleteComment(CommentDto commentDto, Authentication authentication) {
+        User authorOfComment = userService.findByEmail(authentication.getPrincipal().toString());
+        Task task = taskService.getTaskByTitle(commentDto.taskTitle());
+        Comment commentToDelete = commentRepository.findCommentByTaskAndText(task, commentDto.comment())
+                        .orElseThrow(() -> new BadRequestException(String.format("Comment with text=\"%s\" not found", commentDto.comment())));
         if(commentToDelete.getAuthor().equals(authorOfComment) ||
-                authorOfComment.getRoles().stream().map(Role::getName).toList().contains("ROLE_ADMIN")) {
+                authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN")) {
             commentRepository.delete(commentToDelete);
         }
-        throw new IsNotExecutorException("Deleting a comment is prohibited due to authorship.");
+        throw new IsNotExecutorException("Only the author of the comment or the administrator can delete the comment.");
     }
 
     @Override

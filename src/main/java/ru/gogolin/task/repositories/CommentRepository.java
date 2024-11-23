@@ -6,11 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.gogolin.task.entities.Comment;
 import ru.gogolin.task.entities.Task;
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findCommentsByTask(Task task);
     Page<Comment> findCommentsByTask(Task task, Pageable pageable);
-    void deleteCommentByTask(Task task);
+    Optional<Comment> findCommentByTaskAndText(Task task, String text);
 }

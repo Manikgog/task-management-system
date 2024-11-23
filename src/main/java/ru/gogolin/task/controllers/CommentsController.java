@@ -30,16 +30,16 @@ public class CommentsController {
 
     @Operation(summary = "Deletion comment by ID.")
     @DeleteMapping
-    public ResponseEntity<String> deleteComment(@RequestBody long commentId, Principal principal) {
-        commentService.deleteComment(commentId, principal);
+    public ResponseEntity<String> deleteComment(@RequestBody CommentDto commentDto, Authentication authentication) {
+        commentService.deleteComment(commentDto, authentication);
         return ResponseEntity.ok("Comment deleted");
     }
 
     @Operation(summary = "Getting comments by title of task")
-    @GetMapping("/{taskTitle}")
+    @GetMapping("/get")
     public ResponseEntity<List<CommentResponseDto>> getCommentsByTitle(@RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size,
-                                                                       @PathVariable String taskTitle, Principal principal) {
+                                                                       @RequestParam(name = "title") String taskTitle, Principal principal) {
         return ResponseEntity.ok(commentService.getComments(taskTitle, principal, page, size));
     }
 }

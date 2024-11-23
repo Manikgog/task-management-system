@@ -10,7 +10,7 @@ public interface CommentService {
 
     CommentResponseDto addComment(CommentDto commentDto, Authentication authentication);
 
-    void deleteComment(Long commentId, Principal principal);
+    void deleteComment(CommentDto commentDto, Authentication authentication);
 
-    public List<CommentResponseDto> getComments(String taskTitle, Principal principal, int page, int size);
+    List<CommentResponseDto> getComments(String taskTitle, Principal principal, int page, int size);
 }

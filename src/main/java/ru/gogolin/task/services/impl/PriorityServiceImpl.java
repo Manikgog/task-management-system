@@ -7,6 +7,8 @@ import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.repositories.PrioritiesRepository;
 import ru.gogolin.task.services.PriorityService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PriorityServiceImpl implements PriorityService {
@@ -17,5 +19,10 @@ public class PriorityServiceImpl implements PriorityService {
     public Priority getPriority(String priority) {
         return prioritiesRepository.findPriorityByName(priority.trim())
                 .orElseThrow(() -> new BadRequestException(String.format("Приоритет с названием %s не найден", priority)));
+    }
+
+    @Override
+    public List<String> getAll() {
+        return prioritiesRepository.findAll().stream().map(Priority::getName).toList();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.gogolin.task.exceptions.TokenException;
 import ru.gogolin.task.utils.JwtTokenUtils;
 
 import java.io.IOException;
@@ -35,10 +36,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
                 log.debug("Время жизни токена вышло");
-                // TO DO exception
+                throw new TokenException("The token's lifetime has expired.");
             } catch (SignatureException e) {
                 log.debug("Подпись неправильная");
-                // TO DO exception
+                throw new TokenException("The signature is incorrect.");
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
