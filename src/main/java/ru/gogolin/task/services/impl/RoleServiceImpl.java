@@ -4,13 +4,14 @@ import org.springframework.stereotype.Service;
 import ru.gogolin.task.entities.Role;
 import ru.gogolin.task.exceptions.EntityNotFoundException;
 import ru.gogolin.task.repositories.RoleRepository;
+import ru.gogolin.task.services.RoleService;
 
 @Service
-public class RoleService {
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 

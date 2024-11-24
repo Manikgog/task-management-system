@@ -35,10 +35,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
-                log.debug("Время жизни токена вышло");
+                log.debug("The token's lifetime has expired");
                 throw new TokenException("The token's lifetime has expired.");
             } catch (SignatureException e) {
-                log.debug("Подпись неправильная");
+                log.debug("The signature is incorrect");
                 throw new TokenException("The signature is incorrect.");
             }
         }

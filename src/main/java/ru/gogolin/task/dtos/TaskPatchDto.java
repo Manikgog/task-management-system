@@ -9,17 +9,17 @@ import ru.gogolin.task.utils.ValidationConstants;
 public record TaskPatchDto(
         @NotBlank(message = "Title is mandatory!")
         @Length(max = 150, message = "The title is too long, the max number of symbols is 150")
-        @Schema(defaultValue = "Title of task.")
+        @Schema(defaultValue = "Title of task")
         String title,
 
         @NotBlank(message = "Status is mandatory!")
         @Length(max = 50, message = "The title is too long, the max number of symbols is 50")
-        @Schema(defaultValue = "Title of task.", description = "В процессе")
+        @Schema(defaultValue = "in process", description = "Status of task")
         String status,
 
         @NotBlank(message = "Priority is mandatory!")
         @Length(max = 50, message = "The priority is too long, the max number of symbols is 50")
-        @Schema(defaultValue = "Priority of task.", description = "Средний")
+        @Schema(defaultValue = "high priority", description = "Priority of task")
         String priority,
 
         @NotBlank(message = "Email of task executor is mandatory!")

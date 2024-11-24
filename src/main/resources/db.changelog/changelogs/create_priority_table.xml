@@ -16,13 +16,13 @@
         </createTable>
 
         <insert tableName="priorities">
-            <column name="name" value="Высокий"/>
+            <column name="name" value="high priority"/>
         </insert>
         <insert tableName="priorities">
-            <column name="name" value="Средний"/>
+            <column name="name" value="medium priority"/>
         </insert>
         <insert tableName="priorities">
-            <column name="name" value="Низкий"/>
+            <column name="name" value="low priority"/>
         </insert>
     </changeSet>
 

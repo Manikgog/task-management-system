@@ -1,5 +1,6 @@
 package ru.gogolin.task.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class StatusController {
         this.statusService = statusService;
     }
 
+    @Operation(summary = "Getting a list of statuses")
     @GetMapping
     public ResponseEntity<List<String>> getStatuses() {
         return ResponseEntity.ok(statusService.getAll());

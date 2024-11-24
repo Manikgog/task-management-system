@@ -37,10 +37,7 @@ services:
       POSTGRES_PASSWORD: chocolatefrog #${POSTGRES_PASSWORD}
     volumes:
       - tasks-system-db-volume:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "javaguru" ]
-      interval: 10s
-      retries: 3
+
 
 volumes:
   tasks-system-db-volume:

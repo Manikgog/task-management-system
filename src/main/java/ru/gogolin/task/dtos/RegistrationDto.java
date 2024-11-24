@@ -11,15 +11,15 @@ public record RegistrationDto(
         @NotBlank(message = "Email is mandatory!")
         @Length(max = 150, message = "The email is too long, the max number of symbols is 150")
         @Pattern(regexp = ValidationConstants.REGEXP_VALIDATE_EMAIL, message = "Invalid e-mail address")
-        @Schema(defaultValue = "user@email.ru", description = "Email address")
+        @Schema(defaultValue = "ivan@email.ru", description = "Email address")
         String email,
 
         @NotBlank(message = "Password is mandatory!")
-        @Schema(defaultValue = "password", description = "Password")
+        @Schema(defaultValue = "ivan", description = "Password")
         String password,
 
         @NotBlank(message = "Password is mandatory!")
-        @Schema(defaultValue = "password", description = "Password")
+        @Schema(defaultValue = "ivan", description = "Password")
         String confirmPassword,
 
         @NotBlank(message = "Name is mandatory!")

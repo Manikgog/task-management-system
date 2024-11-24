@@ -16,13 +16,13 @@
         </createTable>
 
         <insert tableName="statuses">
-            <column name="name" value="В ожидании"/>
+            <column name="name" value="waiting"/>
         </insert>
         <insert tableName="statuses">
-            <column name="name" value="В процессе"/>
+            <column name="name" value="in process"/>
         </insert>
         <insert tableName="statuses">
-            <column name="name" value="Завершено"/>
+            <column name="name" value="completed"/>
         </insert>
     </changeSet>
 

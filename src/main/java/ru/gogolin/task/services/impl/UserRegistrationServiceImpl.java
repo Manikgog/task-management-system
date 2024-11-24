@@ -3,21 +3,22 @@ package ru.gogolin.task.services.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.gogolin.task.dtos.RegistrationDto;
-import ru.gogolin.task.entities.Role;
 import ru.gogolin.task.entities.User;
 import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.mappers.UserMapper;
 import ru.gogolin.task.repositories.UsersRepository;
+import ru.gogolin.task.services.RoleService;
+import ru.gogolin.task.services.UserRegistrationService;
 import java.util.List;
 
 @Service
-public class UserRegistrationService {
+public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final UsersRepository usersRepository;
     private final RoleService roleService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserRegistrationService(UsersRepository usersRepository,
+    public UserRegistrationServiceImpl(UsersRepository usersRepository,
                                    RoleService roleService,
                                    UserMapper userMapper,
                                    PasswordEncoder passwordEncoder) {

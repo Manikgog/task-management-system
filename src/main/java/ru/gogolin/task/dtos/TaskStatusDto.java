@@ -7,12 +7,12 @@ import org.hibernate.validator.constraints.Length;
 public record TaskStatusDto(
         @NotBlank(message = "Title is mandatory!")
         @Length(max = 150, message = "The title is too long, the max number of symbols is 150")
-        @Schema(defaultValue = "Title of task.")
+        @Schema(defaultValue = "Title of task")
         String title,
 
         @NotBlank(message = "Status is mandatory!")
         @Length(max = 50, message = "The title is too long, the max number of symbols is 50")
-        @Schema(defaultValue = "Title of task.", description = "В процессе")
+        @Schema(defaultValue = "in process", description = "Title of task")
         String status
 
 ) {

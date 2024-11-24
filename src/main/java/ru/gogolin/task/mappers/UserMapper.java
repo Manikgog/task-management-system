@@ -14,5 +14,4 @@ public interface UserMapper {
     @Mapping(source = "email", target = "username")
     User fromDtoToEntity(RegistrationDto registrationDto);
 
-    RegistrationDto fromEntityToDto(User entity);
 }

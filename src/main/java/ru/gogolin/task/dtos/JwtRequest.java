@@ -12,7 +12,7 @@ public record JwtRequest(
         String email,
 
         @NotBlank(message = "Password is mandatory!")
-        @Schema(defaultValue = "password", description = "Password")
+        @Schema(defaultValue = "user", description = "Password")
         String password
 ) {
 }

@@ -23,13 +23,13 @@ public class CommentsController {
         this.commentService = commentService;
     }
 
-    @Operation(summary = "Creation comment.")
+    @Operation(summary = "Creation comment")
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentDto commentDto, Authentication authentication) {
         return new ResponseEntity<>(commentService.addComment(commentDto, authentication), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Deletion comment by ID.")
+    @Operation(summary = "Deletion comment by title of task and text of comment")
     @DeleteMapping
     public ResponseEntity<String> deleteComment(@RequestBody CommentDto commentDto, Authentication authentication) {
         commentService.deleteComment(commentDto, authentication);

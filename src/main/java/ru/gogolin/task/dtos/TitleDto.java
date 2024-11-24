@@ -8,7 +8,7 @@ public record TitleDto(
 
         @NotBlank(message = "Title is mandatory!")
         @Length(max = 150, message = "The title is too long, the max number of symbols is 150")
-        @Schema(defaultValue = "Title of task.")
+        @Schema(defaultValue = "Title of task")
         String title
 
 ) {

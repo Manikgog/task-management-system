@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.projectlombok>1.18.24</org.projectlombok>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+        <org.projectlombok.mapstruct.binding>0.2.0</org.projectlombok.mapstruct.binding>
         <spring.boot.dependencies.version>3.3.3</spring.boot.dependencies.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.0.2</springdoc-openapi-starter-webmvc-ui.version>
         <spring.boot.maven.plugin.version>3.4.0</spring.boot.maven.plugin.version>
@@ -71,6 +72,11 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.3.Final</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-mapstruct-binding</artifactId>
+            <version>${org.projectlombok.mapstruct.binding}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

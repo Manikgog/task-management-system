@@ -1,5 +1,6 @@
 package ru.gogolin.task.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class PriorityController {
         this.priorityService = priorityService;
     }
 
+    @Operation(summary = "Getting a list of priorities")
     @GetMapping
     public ResponseEntity<List<String>> getPriorities() {
         return ResponseEntity.ok(priorityService.getAll());
