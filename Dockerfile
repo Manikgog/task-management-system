@@ -8,5 +8,6 @@ RUN mvn package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 ARG JAR_FILE=/build/target/*.jar
 RUN mkdir -p /opt/task_manager
-COPY --from=builder $JAR_FILE /opt/profiler/app.jar
-ENTRYPOINT ["java", "-jar", "/opt/profiler/app.jar"]
+COPY .env /opt/task_manager/.env
+COPY --from=builder $JAR_FILE /opt/task_manager/app.jar
+ENTRYPOINT ["java", "-jar", "/opt/task_manager/app.jar"]

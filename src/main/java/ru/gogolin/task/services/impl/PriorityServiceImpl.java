@@ -18,7 +18,7 @@ public class PriorityServiceImpl implements PriorityService {
     @Override
     public Priority getPriority(String priority) {
         return prioritiesRepository.findPriorityByName(priority.trim())
-                .orElseThrow(() -> new BadRequestException(String.format("Приоритет с названием %s не найден", priority)));
+                .orElseThrow(() -> new BadRequestException(String.format("Priority named %s not found", priority)));
     }
 
     @Override

@@ -17,7 +17,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public Status getStatus(String status) {
         return statusRepository.findStatusByName(status.trim())
-                .orElseThrow(() -> new BadRequestException(String.format("Статус %s не найден", status)));
+                .orElseThrow(() -> new BadRequestException(String.format("Status %s not found", status)));
     }
 
     @Override

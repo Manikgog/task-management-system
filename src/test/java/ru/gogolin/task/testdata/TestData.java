@@ -12,6 +12,15 @@ public class TestData {
     public static String DELETION_URL = "/user/delete";
     public static String USER_CREATED = "User created.";
     public static final String AUTHENTICATION_RESPONSE_TOKEN_KEY = "token";
+    public static final String ADMIN_EMAIL = "admin@email.ru";
+    public static final String USER_EMAIL = "user@email.ru";
+    public static final String ADMIN_NAME = "admin";
+    public static final String USER_NAME = "user";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String USER_PASSWORD = "$2y$10$qUr/DWFbBa84H.tCa5xrTucaSPEw6n932BLGFaYqT4F5FjNeTBaq6";
+    public static final String ADMIN_PASSWORD = "$2y$10$UQ2zBJlzw9IUW3wDqm.rH.px5EvqIJkOiKWc35jzz9lKe2dFXEDRO";
+
 
 
 }

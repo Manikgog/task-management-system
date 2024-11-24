@@ -17,6 +17,6 @@ public class RoleServiceImpl implements RoleService {
 
     public Role getRoleByName(String roleName) {
         return roleRepository.findByName(roleName)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Роль %s не найдена.", roleName)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("The %s role was not found", roleName)));
     }
 }

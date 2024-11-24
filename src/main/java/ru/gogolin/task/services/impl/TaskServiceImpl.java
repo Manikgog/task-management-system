@@ -39,6 +39,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponseDto addTask(TaskDto taskDto) {
+        if(taskRepository.findByTitle(taskDto.title()).isPresent()){
+            throw new BadRequestException(String.format("Task with title %s already exists", taskDto.title()));
+        }
         User executor = userService.findByEmail(taskDto.executor());
         User author = userService.findByEmail(taskDto.author());
         Status status = statusService.getStatus(taskDto.status());
@@ -60,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(String title) {
         Task task = taskRepository.findByTitle(title)
-                .orElseThrow(() -> new NotFoundException(String.format("Задача под названием %s не найдена", title)));
+                .orElseThrow(() -> new NotFoundException(String.format("The task called %s was not found", title)));
         taskRepository.delete(task);
     }
 
@@ -72,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
             UserDto executorFromDB = userToUserDtoMapper.apply(task.getExecutor());
             return taskToTaskDtoMapper.apply(task, authorFromDB, executorFromDB);
         }
-        throw new BadRequestException(String.format("Пользователь с email=%s не является автором задачи с названием %s.", email, title));
+        throw new BadRequestException(String.format("The user with email=%s is not the author of the task with the name %s", email, title));
     }
 
     @Override
@@ -147,7 +150,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getTaskByTitle(String title) {
         return taskRepository.findByTitle(title)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Задача под названием %s не найдена", title)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("The task called %s was not found", title)));
     }
 
     @Override
@@ -158,7 +161,7 @@ public class TaskServiceImpl implements TaskService {
                 authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN")) {
             Status status = statusService.getStatus(taskDto.status());
             if(status.getName().equals(taskDto.status())) {
-                throw new BadRequestException(String.format("This status \"%s\" has already been established.", status.getName()));
+                throw new BadRequestException(String.format("This status \"%s\" has already been established", status.getName()));
             }else{
                 task.setStatus(status);
                 Task newTask = taskRepository.save(task);

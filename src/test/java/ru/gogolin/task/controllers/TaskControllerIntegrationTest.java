@@ -1,5 +1,6 @@
 package ru.gogolin.task.controllers;
 
+import jakarta.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import ru.gogolin.task.PostgresSQLTestContainerExtension;
 import ru.gogolin.task.dtos.*;
-import ru.gogolin.task.entities.Priority;
-import ru.gogolin.task.entities.Status;
-import ru.gogolin.task.entities.Task;
-import ru.gogolin.task.entities.User;
-import ru.gogolin.task.repositories.PrioritiesRepository;
-import ru.gogolin.task.repositories.StatusRepository;
-import ru.gogolin.task.repositories.TaskRepository;
-import ru.gogolin.task.repositories.UsersRepository;
+import ru.gogolin.task.entities.*;
+import ru.gogolin.task.repositories.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,9 +42,31 @@ public class TaskControllerIntegrationTest extends PostgresSQLTestContainerExten
     private StatusRepository statusRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PrioritiesRepository prioritiesRepository;
 
-    private Random random = new Random();
+    private final Random random = new Random();
+
+    @PostConstruct
+    public void checkUsers() {
+        Role adminRole = roleRepository.findByName(ROLE_ADMIN).get();
+        Role userRole = roleRepository.findByName(ROLE_USER).get();
+        usersRepository.deleteAll();
+        User admin = new User();
+        admin.setUsername(ADMIN_EMAIL);
+        admin.setName(ADMIN_NAME);
+        admin.setPassword(ADMIN_PASSWORD);
+        admin.setRoles(List.of(adminRole));
+        usersRepository.save(admin);
+        User user = new User();
+        user.setUsername(USER_EMAIL);
+        user.setName(USER_NAME);
+        user.setPassword(USER_PASSWORD);
+        user.setRoles(List.of(userRole));
+        usersRepository.save(user);
+    }
 
     @BeforeEach
     public void init(){
@@ -62,11 +80,11 @@ public class TaskControllerIntegrationTest extends PostgresSQLTestContainerExten
 
     private Task createTask(int number, List<Status> statuses, List<Priority> priorities) {
         Task task = new Task();
-        task.setTitle("Title" + number);
-        task.setDescription("Description" + number);
+        task.setTitle("Title " + number);
+        task.setDescription("Description " + number);
         task.setStatus(statuses.get(random.nextInt(statuses.size())));
         task.setPriority(priorities.get(random.nextInt(priorities.size())));
-        task.setAuthor(usersRepository.findByUsername(usersRepository.findAll().get(random.nextInt(usersRepository.findAll().size())).getUsername()).get());
+        task.setAuthor(usersRepository.findByUsername("admin@email.ru").get());
         task.setExecutor(usersRepository.findByUsername("user@email.ru").get());
         return task;
     }
