@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.gogolin.task.PostgresSQLTestContainerExtension;
 import ru.gogolin.task.dtos.JwtRequest;
 import ru.gogolin.task.repositories.*;
-
 import java.util.Map;
 import java.util.Random;
 
@@ -22,6 +21,7 @@ import static ru.gogolin.task.testdata.TestData.AUTH_URL_TEMPLATE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseApiControllerTest extends PostgresSQLTestContainerExtension {
+
     @Autowired
     protected TestRestTemplate restTemplate;
 

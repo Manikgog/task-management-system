@@ -160,7 +160,7 @@ public class TaskServiceImpl implements TaskService {
         if(executor.equals(task.getExecutor()) ||
                 authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN")) {
             Status status = statusService.getStatus(taskDto.status());
-            if(status.getName().equals(taskDto.status())) {
+            if(task.getStatus().getName().equals(taskDto.status())) {
                 throw new BadRequestException(String.format("This status \"%s\" has already been established", status.getName()));
             }else{
                 task.setStatus(status);
@@ -174,20 +174,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto changeTask(TaskPatchDto taskDto) {
+    public TaskResponseDto changeTaskExecutor(TaskExecutorDto taskDto) {
         Task task = getTaskByTitle(taskDto.title());
-        if(!taskDto.status().isEmpty()) {
-            Status status = statusService.getStatus(taskDto.status());
-            task.setStatus(status);
-        }
-        if(!taskDto.priority().isEmpty()) {
-            Priority priority = priorityService.getPriority(taskDto.priority());
-            task.setPriority(priority);
-        }
-        if(!taskDto.executor().isEmpty()) {
-            User executor = userService.findByEmail(taskDto.executor());
-            task.setExecutor(executor);
-        }
+        User user = userService.findByEmail(taskDto.email());
+        task.setExecutor(user);
+        Task newTask = taskRepository.save(task);
+        return taskToTaskDtoMapper.apply(newTask,
+                userToUserDtoMapper.apply(newTask.getAuthor()),
+                userToUserDtoMapper.apply(newTask.getExecutor()));
+    }
+
+    @Override
+    public TaskResponseDto changeTask(TaskPriorityDto taskDto) {
+        Task task = getTaskByTitle(taskDto.title());
+        Priority priority = priorityService.getPriority(taskDto.priority());
+        task.setPriority(priority);
         Task newTask = taskRepository.save(task);
         return taskToTaskDtoMapper.apply(newTask,
                 userToUserDtoMapper.apply(newTask.getAuthor()),

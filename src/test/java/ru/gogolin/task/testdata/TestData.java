@@ -9,7 +9,9 @@ public class TestData {
     public static String GET_YOUR_TASKS_TEMPLATE = "/task/getYourTasks";
     public static String GET_TASKS_BY_AUTHOR_EMAIL_TEMPLATE = "/task/getByAuthorEmail";
     public static String GET_TASKS_BY_EXECUTOR_EMAIL_TEMPLATE = "/task/getByExecutorEmail";
-    public static String PATCH_TASK_TEMPLATE = "/task/patch";
+    public static String CHANGE_STATUS_TASK_TEMPLATE = "/task/changeStatus";
+    public static String CHANGE_TASK_TEMPLATE = "/task/changePriority";
+    public static String CHANGE_EXECUTOR_TEMPLATE = "/task/changeExecutor";
     public static String DELETION_URL = "/user/delete";
     public static String USER_CREATED = "User created.";
     public static String COMMENT_URL_TEMPLATE = "/comment";

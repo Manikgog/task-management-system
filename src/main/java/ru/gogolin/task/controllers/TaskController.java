@@ -76,16 +76,23 @@ public class TaskController {
     }
 
     @Operation(summary = "Changing status of task")
-    @PatchMapping("/patch")
+    @PostMapping("/changeStatus")
     public ResponseEntity<TaskResponseDto> changeStatus(@Valid @RequestBody TaskStatusDto taskDto, Authentication authentication) {
         return ResponseEntity.ok(taskService.changeStatus(taskDto, authentication));
     }
 
     @Operation(summary = "Changing task")
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
-    @PatchMapping
-    public ResponseEntity<TaskResponseDto> changeTask(@Valid @RequestBody TaskPatchDto taskDto) {
+    @PostMapping("/changePriority")
+    public ResponseEntity<TaskResponseDto> changeTaskPriority(@Valid @RequestBody TaskPriorityDto taskDto) {
         return ResponseEntity.ok(taskService.changeTask(taskDto));
+    }
+
+    @Operation(summary = "Changing executor")
+    @PreAuthorize("@checkAccessService.isAdmin(authentication)")
+    @PostMapping("/changeExecutor")
+    public ResponseEntity<TaskResponseDto> changeTaskPriority(@Valid @RequestBody TaskExecutorDto taskDto) {
+        return ResponseEntity.ok(taskService.changeTaskExecutor(taskDto));
     }
 
 }

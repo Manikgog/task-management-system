@@ -19,6 +19,7 @@ import static ru.gogolin.task.testdata.TestData.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentsControllerIntegrationTest extends BaseApiControllerTest {
 
+
     @PostConstruct
     public void checkUsers() {
         Role adminRole = roleRepository.findByName(ROLE_ADMIN).get();

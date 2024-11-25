@@ -1,12 +1,9 @@
 package ru.gogolin.task.services;
 
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
-import ru.gogolin.task.dtos.TaskDto;
-import ru.gogolin.task.dtos.TaskPatchDto;
-import ru.gogolin.task.dtos.TaskResponseDto;
-import ru.gogolin.task.dtos.TaskStatusDto;
+import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.entities.Task;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -29,5 +26,7 @@ public interface TaskService {
 
     TaskResponseDto changeStatus(TaskStatusDto taskDto, Authentication authentication);
 
-    TaskResponseDto changeTask(TaskPatchDto taskDto);
+    TaskResponseDto changeTask(TaskPriorityDto taskDto);
+
+    TaskResponseDto changeTaskExecutor(@Valid TaskExecutorDto taskDto);
 }

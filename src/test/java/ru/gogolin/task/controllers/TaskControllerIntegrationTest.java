@@ -55,8 +55,8 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
         Task task = new Task();
         task.setTitle("Title " + number);
         task.setDescription("Description " + number);
-        task.setStatus(statuses.get(random.nextInt(statuses.size())));
-        task.setPriority(priorities.get(random.nextInt(priorities.size())));
+        task.setStatus(statuses.get(0));
+        task.setPriority(priorities.get(0));
         task.setAuthor(usersRepository.findByUsername("admin@email.ru").get());
         task.setExecutor(usersRepository.findByUsername("user@email.ru").get());
         return task;
@@ -220,24 +220,58 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
 
     @Test
     public void changeStatusTest() {
-        /*Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
+        Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
         User executor = usersRepository.findByUsername(task.getExecutor().getUsername()).get();
         JwtRequest credentials = new JwtRequest(executor.getUsername(), executor.getName());
         HttpHeaders headers = getAuthHeader(credentials);
         TaskStatusDto requestBody = new TaskStatusDto(task.getTitle(), "completed");
         HttpEntity<TaskStatusDto> requestEntity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<TaskResponseDto> responseEntity = restTemplate.exchange(
-                PATCH_TASK_TEMPLATE,
-                HttpMethod.PATCH,
+                CHANGE_STATUS_TASK_TEMPLATE,
+                HttpMethod.POST,
                 requestEntity,
                 TaskResponseDto.class
         );
 
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);*/
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody().status()).isEqualTo("completed");
     }
 
     @Test
-    public void changeTaskTest() {
+    public void changeTaskPriorityTest() {
+        Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
+        HttpHeaders headers = getAuthHeader(credentials);
+        TaskPriorityDto requestBody = new TaskPriorityDto(task.getTitle(), "low priority");
+        HttpEntity<TaskPriorityDto> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<TaskResponseDto> responseEntity = restTemplate.exchange(
+                CHANGE_TASK_TEMPLATE,
+                HttpMethod.POST,
+                requestEntity,
+                TaskResponseDto.class
+        );
 
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody().priority()).isEqualTo("low priority");
+    }
+
+
+    @Test
+    public void changeTaskExecutorTest() {
+        Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
+        HttpHeaders headers = getAuthHeader(credentials);
+        TaskExecutorDto requestBody = new TaskExecutorDto(task.getTitle(), ADMIN_EMAIL);
+        HttpEntity<TaskExecutorDto> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<TaskResponseDto> responseEntity = restTemplate.exchange(
+                CHANGE_EXECUTOR_TEMPLATE,
+                HttpMethod.POST,
+                requestEntity,
+                TaskResponseDto.class
+        );
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody().executor().email()).isEqualTo(ADMIN_EMAIL);
+        Assertions.assertThat(responseEntity.getBody().executor().name()).isEqualTo(ADMIN_NAME);
     }
 }
