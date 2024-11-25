@@ -217,4 +217,27 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
         Page<Task> tasksFromDB = taskRepository.findByExecutor_Username(user.getUsername(), pageable);
         Assertions.assertThat(tasks.size()).isEqualTo(tasksFromDB.get().toList().size());
     }
+
+    @Test
+    public void changeStatusTest() {
+        /*Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
+        User executor = usersRepository.findByUsername(task.getExecutor().getUsername()).get();
+        JwtRequest credentials = new JwtRequest(executor.getUsername(), executor.getName());
+        HttpHeaders headers = getAuthHeader(credentials);
+        TaskStatusDto requestBody = new TaskStatusDto(task.getTitle(), "completed");
+        HttpEntity<TaskStatusDto> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<TaskResponseDto> responseEntity = restTemplate.exchange(
+                PATCH_TASK_TEMPLATE,
+                HttpMethod.PATCH,
+                requestEntity,
+                TaskResponseDto.class
+        );
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);*/
+    }
+
+    @Test
+    public void changeTaskTest() {
+
+    }
 }

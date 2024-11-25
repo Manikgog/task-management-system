@@ -82,23 +82,28 @@ public class CommentsControllerIntegrationTest extends BaseApiControllerTest {
     public void createCommentTest() {
         commentRepository.deleteAll();
         List<Task> tasks = taskRepository.findAll();
-        CommentDto requestBody = new CommentDto(tasks.get(0).getTitle(), "Comment text");
+        String commentText = "Comment text";
+        CommentDto requestBody = new CommentDto(tasks.get(0).getTitle(), commentText);
         JwtRequest credentials = new JwtRequest(tasks.get(tasks.size()-1).getAuthor().getUsername(), tasks.get(tasks.size()-1).getAuthor().getName());
         HttpHeaders headers = getAuthHeader(credentials);
         HttpEntity<CommentDto> requestEntity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<CommentResponseDto> responseEntity = restTemplate.exchange(
-                CREATE_COMMENT_URL_TEMPLATE,
+                COMMENT_URL_TEMPLATE,
                 HttpMethod.POST,
                 requestEntity,
                 CommentResponseDto.class
         );
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Assertions.assertThat(responseEntity.getBody().comment()).isEqualTo("Comment text");
+        Assertions.assertThat(responseEntity.getBody().comment()).isEqualTo(commentText);
         Assertions.assertThat(responseEntity.getBody().taskTitle()).isEqualTo(tasks.get(0).getTitle());
         Assertions.assertThat(responseEntity.getBody().author().email()).isEqualTo(tasks.get(0).getAuthor().getUsername());
 
-
+        Comment newComment = commentRepository.findCommentByTaskAndText(tasks.get(0), commentText).get();
+        Assertions.assertThat(responseEntity.getBody().taskTitle()).isEqualTo(newComment.getTask().getTitle());
+        Assertions.assertThat(responseEntity.getBody().author().email()).isEqualTo(newComment.getAuthor().getUsername());
+        Assertions.assertThat(responseEntity.getBody().comment()).isEqualTo(commentText);
+        Assertions.assertThat(responseEntity.getBody().author().name()).isEqualTo(newComment.getAuthor().getName());
     }
 
 
@@ -111,7 +116,7 @@ public class CommentsControllerIntegrationTest extends BaseApiControllerTest {
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
         String taskTitle = comments.get(0).getTask().getTitle();
         ResponseEntity<List<CommentResponseDto>> responseEntity = restTemplate.exchange(
-                CREATE_COMMENT_URL_TEMPLATE + "/get?page=0&size=10&title=" + taskTitle,
+                COMMENT_URL_TEMPLATE + "/get?page=0&size=10&title=" + taskTitle,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {}
@@ -120,5 +125,26 @@ public class CommentsControllerIntegrationTest extends BaseApiControllerTest {
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(responseEntity.getBody().size()).isEqualTo(comments.size());
     }
+
+
+    @Test
+    public void deleteCommentTest() {
+        List<Comment> comments = commentRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        User user = usersRepository.findByUsername(USER_EMAIL).get();
+        JwtRequest credentials = new JwtRequest(user.getUsername(), user.getName());
+        HttpHeaders headers = getAuthHeader(credentials);
+        CommentDto requestBody = new CommentDto(comments.get(0).getTask().getTitle(), comments.get(0).getText());
+        HttpEntity<CommentDto> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                COMMENT_URL_TEMPLATE,
+                HttpMethod.DELETE,
+                requestEntity,
+                String.class
+        );
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody()).isEqualTo("Comment deleted");
+    }
+
 
 }

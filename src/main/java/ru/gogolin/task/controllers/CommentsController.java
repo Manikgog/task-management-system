@@ -34,7 +34,8 @@ public class CommentsController {
 
     @Operation(summary = "Deletion comment by title of task and text of comment")
     @DeleteMapping
-    public ResponseEntity<String> deleteComment(@RequestBody CommentDto commentDto, Authentication authentication) {
+    public ResponseEntity<String> deleteComment(@RequestBody CommentDto commentDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         commentService.deleteComment(commentDto, authentication);
         return ResponseEntity.ok("Comment deleted");
     }

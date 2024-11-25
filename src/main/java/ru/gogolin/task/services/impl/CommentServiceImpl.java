@@ -62,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
         if(commentToDelete.getAuthor().equals(authorOfComment) ||
                 authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().contains("ROLE_ADMIN")) {
             commentRepository.delete(commentToDelete);
+            return;
         }
         throw new IsNotExecutorException("Only the author of the comment or the administrator can delete the comment.");
     }

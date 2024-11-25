@@ -9,9 +9,10 @@ public class TestData {
     public static String GET_YOUR_TASKS_TEMPLATE = "/task/getYourTasks";
     public static String GET_TASKS_BY_AUTHOR_EMAIL_TEMPLATE = "/task/getByAuthorEmail";
     public static String GET_TASKS_BY_EXECUTOR_EMAIL_TEMPLATE = "/task/getByExecutorEmail";
+    public static String PATCH_TASK_TEMPLATE = "/task/patch";
     public static String DELETION_URL = "/user/delete";
     public static String USER_CREATED = "User created.";
-    public static String CREATE_COMMENT_URL_TEMPLATE = "/comment";
+    public static String COMMENT_URL_TEMPLATE = "/comment";
     public static final String AUTHENTICATION_RESPONSE_TOKEN_KEY = "token";
     public static final String ADMIN_EMAIL = "admin@email.ru";
     public static final String USER_EMAIL = "user@email.ru";
