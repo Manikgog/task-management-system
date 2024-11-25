@@ -5,54 +5,27 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
-import ru.gogolin.task.PostgresSQLTestContainerExtension;
 import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.entities.*;
-import ru.gogolin.task.repositories.*;
-
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static ru.gogolin.task.testdata.TestData.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TaskControllerIntegrationTest extends PostgresSQLTestContainerExtension {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private StatusRepository statusRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PrioritiesRepository prioritiesRepository;
-
-    private final Random random = new Random();
+public class TaskControllerIntegrationTest extends BaseApiControllerTest {
 
     @PostConstruct
     public void checkUsers() {
         Role adminRole = roleRepository.findByName(ROLE_ADMIN).get();
         Role userRole = roleRepository.findByName(ROLE_USER).get();
+        taskRepository.deleteAll();
         usersRepository.deleteAll();
         User admin = new User();
         admin.setUsername(ADMIN_EMAIL);
@@ -243,24 +216,5 @@ public class TaskControllerIntegrationTest extends PostgresSQLTestContainerExten
         List<TaskResponseDto> tasks = responseEntity.getBody();
         Page<Task> tasksFromDB = taskRepository.findByExecutor_Username(user.getUsername(), pageable);
         Assertions.assertThat(tasks.size()).isEqualTo(tasksFromDB.get().toList().size());
-    }
-
-
-    private HttpHeaders getAuthHeader(JwtRequest credentials) {
-        HttpEntity<JwtRequest> requestHttpAuthEntity = new HttpEntity<>(credentials);
-
-        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
-                AUTH_URL_TEMPLATE,
-                HttpMethod.POST,
-                requestHttpAuthEntity,
-                new ParameterizedTypeReference<>() {
-                });
-
-        Map<String, String> responseMap = responseEntity.getBody();
-        String token = "Bearer " + responseMap.get(AUTHENTICATION_RESPONSE_TOKEN_KEY);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, token);
-        return headers;
     }
 }

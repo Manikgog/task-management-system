@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
+
 public record CommentDto(
 
         @NotBlank(message = "Title is mandatory!")
@@ -15,5 +17,5 @@ public record CommentDto(
         @Length(max = 250, message = "The comment is too long, the max number of symbols is 250")
         @Schema(defaultValue = "Text of comment", description = "The content of the comment.")
         String comment
-) {
+) implements Serializable {
 }

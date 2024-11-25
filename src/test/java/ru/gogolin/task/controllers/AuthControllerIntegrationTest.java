@@ -5,41 +5,18 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.gogolin.task.PostgresSQLTestContainerExtension;
 import ru.gogolin.task.dtos.EmailDto;
 import ru.gogolin.task.dtos.JwtRequest;
 import ru.gogolin.task.dtos.RegistrationDto;
 import ru.gogolin.task.entities.Role;
 import ru.gogolin.task.entities.User;
-import ru.gogolin.task.repositories.RoleRepository;
-import ru.gogolin.task.repositories.UsersRepository;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static ru.gogolin.task.testdata.TestData.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerIntegrationTest extends PostgresSQLTestContainerExtension {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+public class AuthControllerIntegrationTest extends BaseApiControllerTest {
 
     @PostConstruct
     private void deletionDB(){
@@ -120,24 +97,6 @@ public class AuthControllerIntegrationTest extends PostgresSQLTestContainerExten
         );
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(responseEntity.getBody()).isEqualTo("User deleted.");
-    }
-
-
-
-    private HttpHeaders getAuthHeader(JwtRequest credentials) {
-        HttpEntity<JwtRequest> requestHttpAuthEntity = new HttpEntity<>(credentials);
-        ResponseEntity<Map<String, String>> responseEntity = restTemplate.exchange(
-                AUTH_URL_TEMPLATE,
-                HttpMethod.POST,
-                requestHttpAuthEntity,
-                new ParameterizedTypeReference<>() {
-                });
-
-        Map<String, String> responseMap = responseEntity.getBody();
-        String token = "Bearer " + responseMap.get(AUTHENTICATION_RESPONSE_TOKEN_KEY);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(AUTHORIZATION, token);
-        return headers;
     }
 
 }
