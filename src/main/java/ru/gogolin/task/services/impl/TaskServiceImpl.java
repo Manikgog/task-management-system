@@ -59,9 +59,7 @@ public class TaskServiceImpl implements TaskService {
                 executor
         );
         Task newTask = taskRepository.save(task);
-        UserDto authorFromDB = userToUserDtoMapper.apply(newTask.getAuthor());
-        UserDto executorFromDB = userToUserDtoMapper.apply(newTask.getExecutor());
-        return taskToTaskDtoMapper.apply(newTask, authorFromDB, executorFromDB);
+        return taskToTaskDtoMapper.apply(newTask);
     }
 
     @Override
@@ -79,9 +77,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponseDto getTask(String title, String email) {
         Task task = getTaskByTitle(title);
         if(task.getAuthor().getUsername().equals(email)) {
-            UserDto authorFromDB = userToUserDtoMapper.apply(task.getAuthor());
-            UserDto executorFromDB = userToUserDtoMapper.apply(task.getExecutor());
-            return taskToTaskDtoMapper.apply(task, authorFromDB, executorFromDB);
+            return taskToTaskDtoMapper.apply(task);
         }
         throw new BadRequestException(String.format("The user with email=%s is not the author of the task with the name %s", email, title));
     }
@@ -181,9 +177,7 @@ public class TaskServiceImpl implements TaskService {
             }else{
                 task.setStatus(status);
                 Task newTask = taskRepository.save(task);
-                return taskToTaskDtoMapper.apply(newTask,
-                        userToUserDtoMapper.apply(newTask.getAuthor()),
-                        userToUserDtoMapper.apply(newTask.getExecutor()));
+                return taskToTaskDtoMapper.apply(newTask);
             }
         }
         throw new IsNotExecutorException("You cannot change the status of non-your tasks if you are not an administrator.");
@@ -196,9 +190,7 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.findByEmail(taskDto.email());
         task.setExecutor(user);
         Task newTask = taskRepository.save(task);
-        return taskToTaskDtoMapper.apply(newTask,
-                userToUserDtoMapper.apply(newTask.getAuthor()),
-                userToUserDtoMapper.apply(newTask.getExecutor()));
+        return taskToTaskDtoMapper.apply(newTask);
     }
 
     @Override
@@ -208,8 +200,6 @@ public class TaskServiceImpl implements TaskService {
         Priority priority = priorityService.getPriority(taskDto.priority());
         task.setPriority(priority);
         Task newTask = taskRepository.save(task);
-        return taskToTaskDtoMapper.apply(newTask,
-                userToUserDtoMapper.apply(newTask.getAuthor()),
-                userToUserDtoMapper.apply(newTask.getExecutor()));
+        return taskToTaskDtoMapper.apply(newTask);
     }
 }

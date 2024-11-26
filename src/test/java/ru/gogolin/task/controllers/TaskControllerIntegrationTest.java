@@ -70,15 +70,15 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
     @Test
     public void createTaskTest(){
         taskRepository.deleteAll();
-        JwtRequest credentials = new JwtRequest("admin@email.ru", "admin");
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
         HttpHeaders headers = getAuthHeader(credentials);
         TaskDto request = new TaskDto(
                 "test title",
                 "test description",
                 "in process",
                 "medium priority",
-                "user@email.ru",
-                "admin@email.ru"
+                USER_EMAIL,
+                ADMIN_EMAIL
         );
         HttpEntity<TaskDto> requestEntity = new HttpEntity<>(request, headers);
 
@@ -90,17 +90,17 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
         );
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        Assertions.assertThat(responseEntity.getBody().author().email()).isEqualTo("admin@email.ru");
-        Assertions.assertThat(responseEntity.getBody().executor().email()).isEqualTo("user@email.ru");
+        Assertions.assertThat(responseEntity.getBody().author().email()).isEqualTo(ADMIN_EMAIL);
+        Assertions.assertThat(responseEntity.getBody().executor().email()).isEqualTo(USER_EMAIL);
         Assertions.assertThat(responseEntity.getBody().description()).isEqualTo("test description");
         Assertions.assertThat(responseEntity.getBody().title()).isEqualTo("test title");
         Assertions.assertThat(responseEntity.getBody().status()).isEqualTo("in process");
         Assertions.assertThat(responseEntity.getBody().priority()).isEqualTo("medium priority");
 
         Task newTask = taskRepository.findByTitle("test title").get();
-        Assertions.assertThat(newTask.getAuthor().getUsername()).isEqualTo("admin@email.ru");
+        Assertions.assertThat(newTask.getAuthor().getUsername()).isEqualTo(ADMIN_EMAIL);
         Assertions.assertThat(newTask.getTitle()).isEqualTo("test title");
-        Assertions.assertThat(newTask.getExecutor().getUsername()).isEqualTo("user@email.ru");
+        Assertions.assertThat(newTask.getExecutor().getUsername()).isEqualTo(USER_EMAIL);
         Assertions.assertThat(newTask.getStatus().getName()).isEqualTo("in process");
         Assertions.assertThat(newTask.getPriority().getName()).isEqualTo("medium priority");
     }
@@ -110,7 +110,7 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
     public void deletionTest() {
         Task taskToDelete = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
         TitleDto request = new TitleDto(taskToDelete.getTitle());
-        JwtRequest credentials = new JwtRequest("admin@email.ru", "admin");
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
         HttpHeaders headers = getAuthHeader(credentials);
         HttpEntity<TitleDto> requestEntity = new HttpEntity<>(request, headers);
 
@@ -130,11 +130,12 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
 
     @Test
     public void getAllTasksTest(){
-        JwtRequest credentials = new JwtRequest("admin@email.ru", "admin");
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
         HttpHeaders headers = getAuthHeader(credentials);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        int page = 0, size = 10;
         ResponseEntity<List<TaskResponseDto>> responseEntity = restTemplate.exchange(
-                GET_ALL_TASK_TEMPLATE + "?page=0&size=10",
+                GET_ALL_TASK_TEMPLATE + "?page=" + page + "&size=" + size,
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<>() {}
@@ -273,5 +274,28 @@ public class TaskControllerIntegrationTest extends BaseApiControllerTest {
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(responseEntity.getBody().executor().email()).isEqualTo(ADMIN_EMAIL);
         Assertions.assertThat(responseEntity.getBody().executor().name()).isEqualTo(ADMIN_NAME);
+    }
+
+    @Test
+    public void getTaskTest() {
+        Task task = taskRepository.findAll().get(random.nextInt(taskRepository.findAll().size()));
+        JwtRequest credentials = new JwtRequest(ADMIN_EMAIL, ADMIN_NAME);
+        HttpHeaders headers = getAuthHeader(credentials);
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<TaskResponseDto> responseEntity = restTemplate.exchange(
+                GET_BY_TITLE_TEMPLATE + "?title=" + task.getTitle(),
+                HttpMethod.GET,
+                requestEntity,
+                TaskResponseDto.class
+        );
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody().title()).isEqualTo(task.getTitle());
+        Assertions.assertThat(responseEntity.getBody().description()).isEqualTo(task.getDescription());
+        Assertions.assertThat(responseEntity.getBody().priority()).isEqualTo(task.getPriority().getName());
+        Assertions.assertThat(responseEntity.getBody().executor().email()).isEqualTo(USER_EMAIL);
+        Assertions.assertThat(responseEntity.getBody().executor().name()).isEqualTo(USER_NAME);
+        Assertions.assertThat(responseEntity.getBody().author().email()).isEqualTo(ADMIN_EMAIL);
+        Assertions.assertThat(responseEntity.getBody().author().name()).isEqualTo(ADMIN_NAME);
     }
 }

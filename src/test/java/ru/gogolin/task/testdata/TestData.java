@@ -12,6 +12,7 @@ public class TestData {
     public static String CHANGE_STATUS_TASK_TEMPLATE = "/task/changeStatus";
     public static String CHANGE_TASK_TEMPLATE = "/task/changePriority";
     public static String CHANGE_EXECUTOR_TEMPLATE = "/task/changeExecutor";
+    public static String GET_BY_TITLE_TEMPLATE = "/task/getByTitle";
     public static String DELETION_URL = "/user/delete";
     public static String USER_CREATED = "User created.";
     public static String COMMENT_URL_TEMPLATE = "/comment";

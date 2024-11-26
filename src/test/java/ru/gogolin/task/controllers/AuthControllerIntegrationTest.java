@@ -83,6 +83,48 @@ public class AuthControllerIntegrationTest extends BaseApiControllerTest {
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+
+    @Test
+    public void createAuthTokenNegativeTestByNotValidEmail() {
+        JwtRequest request = new JwtRequest("adminemail.ru", "admin");
+        HttpEntity<JwtRequest> requestEntity = new HttpEntity<>(request);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                AUTH_URL_TEMPLATE,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void createAuthTokenNegativeTestByNotValidPassword() {
+        JwtRequest request = new JwtRequest("admin@email.ru", "");
+        HttpEntity<JwtRequest> requestEntity = new HttpEntity<>(request);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                AUTH_URL_TEMPLATE,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    public void createAuthTokenNegativeTestByUnregisteredUser() {
+        String wrongEmail = "admin@gmail.ru";
+        JwtRequest request = new JwtRequest(wrongEmail, "admin");
+        HttpEntity<JwtRequest> requestEntity = new HttpEntity<>(request);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                AUTH_URL_TEMPLATE,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(responseEntity.getBody()).isEqualTo(String.format("User with email -> '%s' not found", wrongEmail));
+    }
+
     @Test
     public void deleteTest() {
         JwtRequest credentials = new JwtRequest("admin@email.ru", "admin");

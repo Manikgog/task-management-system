@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.gogolin.task.annotations.LogException;
 import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.*;
-import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.services.AuthenticationService;
 import ru.gogolin.task.services.UserRegistrationService;
 import ru.gogolin.task.services.impl.UserService;
@@ -34,9 +33,6 @@ public class AuthController {
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@Valid @RequestBody JwtRequest authRequest) {
         AuthenticationUserDto authenticationUserDto = authenticationService.findByEmailAndPassword(authRequest);
-        if(authenticationUserDto == null) {
-            throw new BadRequestException("Incorrect email or password.");
-        }
         String token = jwtTokenUtils.generateToken(authenticationUserDto);
         return ResponseEntity.ok(new JwtResponse(token));
     }

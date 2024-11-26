@@ -43,8 +43,8 @@ public class TaskController {
     @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @GetMapping("/getByTitle")
-    public ResponseEntity<TaskResponseDto> getTask(@Valid @RequestBody TitleDto title, Principal principal) {
-        return ResponseEntity.ok(taskService.getTask(title.title(), principal.getName()));
+    public ResponseEntity<TaskResponseDto> getTask(@RequestParam(name = "title") String title, Principal principal) {
+        return ResponseEntity.ok(taskService.getTask(title, principal.getName()));
     }
 
     @Operation(summary = "Getting all the tasks")

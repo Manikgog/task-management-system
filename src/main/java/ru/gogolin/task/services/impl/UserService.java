@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
     @LogExecution
     public User findByEmail(String email) {
         return usersRepository.findByUsername(email)
-                .orElseThrow(() -> new BadRequestException(String.format("Пользователь c email -> '%s' не найден", email)));
+                .orElseThrow(() -> new BadRequestException(String.format("User with email -> '%s' not found", email)));
     }
 
     @Override
