@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
+import ru.gogolin.task.annotations.LogException;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.entities.Priority;
 import ru.gogolin.task.entities.Status;
@@ -38,6 +40,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskToTaskResponseDtoMapper taskToTaskDtoMapper;
 
     @Override
+    @LogExecution
+    @LogException
     public TaskResponseDto addTask(TaskDto taskDto) {
         if(taskRepository.findByTitle(taskDto.title()).isPresent()){
             throw new BadRequestException(String.format("Task with title %s already exists", taskDto.title()));
@@ -61,6 +65,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
+    @LogException
     public void deleteTask(String title) {
         Task task = taskRepository.findByTitle(title)
                 .orElseThrow(() -> new NotFoundException(String.format("The task called %s was not found", title)));
@@ -68,6 +74,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
+    @LogException
     public TaskResponseDto getTask(String title, String email) {
         Task task = getTaskByTitle(title);
         if(task.getAuthor().getUsername().equals(email)) {
@@ -79,6 +87,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
     public List<TaskResponseDto> getAllTasks(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Task> tasks = taskRepository.findAll(pageable);
@@ -95,6 +104,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
     public List<TaskResponseDto> getTasksByAuthor(String authorEmail, int page, int size) {
         User author = userService.findByEmail(authorEmail);
         Pageable pageable = PageRequest.of(page, size);
@@ -113,6 +123,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
+    @LogExecution
     public List<TaskResponseDto> getTasksByExecutor(String executorEmail, int page, int size) {
         User executor = userService.findByEmail(executorEmail);
         Pageable pageable = PageRequest.of(page, size);
@@ -131,6 +142,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
+    @LogExecution
     public List<TaskResponseDto> getTasks(Principal principal,int page, int size) {
         User author = userService.findByEmail(principal.getName());
         Pageable pageable = PageRequest.of(page, size);
@@ -148,12 +160,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
+    @LogException
     public Task getTaskByTitle(String title) {
         return taskRepository.findByTitle(title)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("The task called %s was not found", title)));
     }
 
     @Override
+    @LogExecution
+    @LogException
     public TaskResponseDto changeStatus(TaskStatusDto taskDto, Authentication authentication) {
         User executor = userService.findByEmail(authentication.getName());
         Task task = getTaskByTitle(taskDto.title());
@@ -174,6 +190,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
     public TaskResponseDto changeTaskExecutor(TaskExecutorDto taskDto) {
         Task task = getTaskByTitle(taskDto.title());
         User user = userService.findByEmail(taskDto.email());
@@ -185,6 +202,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @LogExecution
     public TaskResponseDto changeTask(TaskPriorityDto taskDto) {
         Task task = getTaskByTitle(taskDto.title());
         Priority priority = priorityService.getPriority(taskDto.priority());

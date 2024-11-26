@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import ru.gogolin.task.annotations.LogException;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.CommentDto;
 import ru.gogolin.task.dtos.CommentResponseDto;
 import ru.gogolin.task.entities.Comment;
@@ -39,6 +41,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @LogExecution
+    @LogException
     public CommentResponseDto addComment(CommentDto commentDto, Authentication authentication) throws BadRequestException {
         User authorOfComment = userService.findByEmail(authentication.getPrincipal().toString());
         Task task = taskService.getTaskByTitle(commentDto.taskTitle());
@@ -54,6 +58,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @LogExecution
+    @LogException
     public void deleteComment(CommentDto commentDto, Authentication authentication) {
         User authorOfComment = userService.findByEmail(authentication.getPrincipal().toString());
         Task task = taskService.getTaskByTitle(commentDto.taskTitle());
@@ -68,6 +74,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @LogExecution
     public List<CommentResponseDto> getComments(String taskTitle, Principal principal, int page, int size) {
         Task task = taskService.getTaskByTitle(taskTitle);
         Pageable pageable = PageRequest.of(page, size);

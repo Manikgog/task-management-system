@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.CommentDto;
 import ru.gogolin.task.dtos.CommentResponseDto;
 import ru.gogolin.task.services.CommentService;
@@ -26,6 +27,7 @@ public class CommentsController {
     }
 
     @Operation(summary = "Creation comment")
+    @LogExecution
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentDto commentDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -33,6 +35,7 @@ public class CommentsController {
     }
 
     @Operation(summary = "Deletion comment by title of task and text of comment")
+    @LogExecution
     @DeleteMapping
     public ResponseEntity<String> deleteComment(@RequestBody CommentDto commentDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,6 +44,7 @@ public class CommentsController {
     }
 
     @Operation(summary = "Getting comments by title of task")
+    @LogExecution
     @GetMapping("/get")
     public ResponseEntity<List<CommentResponseDto>> getCommentsByTitle(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                        @RequestParam(name = "size", defaultValue = "10") int size,

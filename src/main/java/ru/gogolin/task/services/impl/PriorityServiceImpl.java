@@ -2,6 +2,8 @@ package ru.gogolin.task.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.gogolin.task.annotations.LogException;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.entities.Priority;
 import ru.gogolin.task.exceptions.BadRequestException;
 import ru.gogolin.task.repositories.PrioritiesRepository;
@@ -16,12 +18,15 @@ public class PriorityServiceImpl implements PriorityService {
     private final PrioritiesRepository prioritiesRepository;
 
     @Override
+    @LogExecution
+    @LogException
     public Priority getPriority(String priority) {
         return prioritiesRepository.findPriorityByName(priority.trim())
                 .orElseThrow(() -> new BadRequestException(String.format("Priority named %s not found", priority)));
     }
 
     @Override
+    @LogExecution
     public List<String> getAll() {
         return prioritiesRepository.findAll().stream().map(Priority::getName).toList();
     }

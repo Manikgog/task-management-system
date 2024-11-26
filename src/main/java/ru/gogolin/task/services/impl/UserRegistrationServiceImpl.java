@@ -2,6 +2,8 @@ package ru.gogolin.task.services.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.gogolin.task.annotations.LogException;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.RegistrationDto;
 import ru.gogolin.task.entities.User;
 import ru.gogolin.task.exceptions.BadRequestException;
@@ -28,12 +30,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
+    @LogExecution
+    @LogException
     public void createNewUser(RegistrationDto registrationDto) {
         if(!registrationDto.password().equals(registrationDto.confirmPassword())){
-            throw new BadRequestException("Пароли не совпадают");
+            throw new BadRequestException("Passwords don't match");
         }
         if(usersRepository.findByUsername(registrationDto.email()).isPresent()){
-            throw new BadRequestException("Пользователь с указаной почтой уже существует");
+            throw new BadRequestException("The user with the specified email already exists");
         }
         User user = userMapper.fromDtoToEntity(registrationDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

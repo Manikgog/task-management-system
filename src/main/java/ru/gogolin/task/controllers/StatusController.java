@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.services.StatusService;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class StatusController {
     }
 
     @Operation(summary = "Getting a list of statuses")
+    @LogExecution
     @GetMapping
     public ResponseEntity<List<String>> getStatuses() {
         return ResponseEntity.ok(statusService.getAll());

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.*;
 import ru.gogolin.task.services.TaskService;
 import java.security.Principal;
@@ -23,27 +24,31 @@ public class TaskController {
     private final TaskService taskService;
 
     @Operation(summary = "Creation task")
+    @LogExecution
     @PostMapping
-    public ResponseEntity<TaskResponseDto> createTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskResponseDto> createTask(@Valid @RequestBody TaskDto taskDto) {
         return new ResponseEntity<>(taskService.addTask(taskDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Deletion task")
+    @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @DeleteMapping
-    public ResponseEntity<String> deleteTask(@RequestBody TitleDto title) {
+    public ResponseEntity<String> deleteTask(@Valid @RequestBody TitleDto title) {
         taskService.deleteTask(title.title());
         return ResponseEntity.ok("Task deleted.");
     }
 
     @Operation(summary = "Search for a task by title")
+    @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @GetMapping("/getByTitle")
-    public ResponseEntity<TaskResponseDto> getTask(@RequestBody TitleDto title, Principal principal) {
+    public ResponseEntity<TaskResponseDto> getTask(@Valid @RequestBody TitleDto title, Principal principal) {
         return ResponseEntity.ok(taskService.getTask(title.title(), principal.getName()));
     }
 
     @Operation(summary = "Getting all the tasks")
+    @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @GetMapping("/getAll")
     public ResponseEntity<List<TaskResponseDto>> getAllTasks(@RequestParam(name = "page", defaultValue = "0") int page,
@@ -52,6 +57,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Getting your tasks")
+    @LogExecution
     @GetMapping("/getYourTasks")
     public ResponseEntity<List<TaskResponseDto>> getTasks(@RequestParam(name = "page", defaultValue = "0") int page,
                                                           @RequestParam(name = "size", defaultValue = "10") int size,
@@ -60,6 +66,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Getting tasks by author")
+    @LogExecution
     @PostMapping("/getByAuthorEmail")
     public ResponseEntity<List<TaskResponseDto>> getTasksByAuthor(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                   @RequestParam(name = "size", defaultValue = "10") int size,
@@ -68,6 +75,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Getting tasks by executor")
+    @LogExecution
     @PostMapping("/getByExecutorEmail")
     public ResponseEntity<List<TaskResponseDto>> getTasksByExecutor(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                     @RequestParam(name = "size", defaultValue = "10") int size,
@@ -76,12 +84,14 @@ public class TaskController {
     }
 
     @Operation(summary = "Changing status of task")
+    @LogExecution
     @PostMapping("/changeStatus")
     public ResponseEntity<TaskResponseDto> changeStatus(@Valid @RequestBody TaskStatusDto taskDto, Authentication authentication) {
         return ResponseEntity.ok(taskService.changeStatus(taskDto, authentication));
     }
 
     @Operation(summary = "Changing task")
+    @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @PostMapping("/changePriority")
     public ResponseEntity<TaskResponseDto> changeTaskPriority(@Valid @RequestBody TaskPriorityDto taskDto) {
@@ -89,6 +99,7 @@ public class TaskController {
     }
 
     @Operation(summary = "Changing executor")
+    @LogExecution
     @PreAuthorize("@checkAccessService.isAdmin(authentication)")
     @PostMapping("/changeExecutor")
     public ResponseEntity<TaskResponseDto> changeTaskPriority(@Valid @RequestBody TaskExecutorDto taskDto) {

@@ -1,6 +1,7 @@
 package ru.gogolin.task.mappers;
 
 import org.springframework.stereotype.Component;
+import ru.gogolin.task.annotations.LogExecution;
 import ru.gogolin.task.dtos.TaskResponseDto;
 import ru.gogolin.task.dtos.UserDto;
 import ru.gogolin.task.entities.Task;
@@ -8,6 +9,7 @@ import ru.gogolin.task.entities.Task;
 @Component
 public class TaskToTaskResponseDtoMapper {
 
+    @LogExecution
     public TaskResponseDto apply(Task task, UserDto author, UserDto executor) {
         return new TaskResponseDto(
                 task.getTitle(),
